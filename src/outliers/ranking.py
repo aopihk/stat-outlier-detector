@@ -35,7 +35,7 @@ def select(cands: list[Candidate], cfg: dict, top_n: int | None = None) -> Selec
         top.context = []
         for c in group[1:]:
             if c.score >= g["context_score"] and _base_stat(c.stat) not in seen:
-                top.context.append(c.reason)
+                top.context.append(c.brief)
                 seen.add(_base_stat(c.stat))
         best.append(top)
     best.sort(key=lambda c: c.score, reverse=True)

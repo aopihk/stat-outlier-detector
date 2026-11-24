@@ -14,6 +14,8 @@ from .baselines import (
     team_rate,
     team_value,
 )
+from scipy import stats
+
 from .scoring import count_z, empirical_z, pct_z
 from .seasons import REGULAR, season_start_year, season_window
 
@@ -40,6 +42,10 @@ class Candidate:
     tags: list[str] = field(default_factory=list)
     score: float = 0.0
     context: list[str] = field(default_factory=list)
+    brief: str = ""     # shorter reason used when this shows up as context on another item
+
+    def __post_init__(self):
+        self.brief = self.brief or self.reason
 
     def to_dict(self) -> dict:
         return {k: v for k, v in self.__dict__.items()}
@@ -107,6 +113,28 @@ def _fmt_count(stat: str, x: float) -> str:
 
 def _fmt_pct(stat: str, makes: float, attempts: float) -> str:
     return f"{int(makes)}-{int(attempts)} {PCT_LABELS[stat]} ({makes / attempts:.0%})"
+
+
+def odds(z: float) -> str:
+    """A z-score as plain-language odds, e.g. "1-in-290"."""
+    p = float(stats.norm.sf(abs(z)))
+    if p < 1e-6:
+        return "rarer than 1-in-a-million"
+    n = 1 / p
+    digits = len(str(int(n))) - 2
+    n = round(n, -digits) if digits > 0 else round(n)
+    return f"1-in-{int(n):,}"
+
+
+def rarity(z: float, who: str) -> str:
+    """e.g. "a 1-in-290 game for this player" or "a 1-in-160 low for this player"."""
+    kind = "low" if z < 0 else "game"
+    text = odds(z).replace("rarer than ", "rarer-than-")
+    return f"a {text} {kind} for this {who}"
+
+
+def _fmt_num(x: float) -> str:
+    return f"{x:.0f}" if x >= 10 else f"{x:.1f}"
 
 
 def _fmt_share(p: float) -> str:
@@ -180,9 +208,10 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
             tags.append(f"Early exit ({int(r.MIN)} of ~{em:.0f} min)")
         established = em is not None and em >= u["min_expected_minutes"]
 
-        def add(kind, stat, value, expected, z, reason):
+        def add(kind, stat, value, expected, z, reason, brief=""):
             out.append(Candidate(kind, f"P:{pid}", r.PLAYER_NAME, r.TEAM_ABBREVIATION, r.MATCHUP,
-                                 stat, float(value), expected, z, reason, player_line(r), list(tags)))
+                                 stat, float(value), expected, z, reason, player_line(r), list(tags),
+                                 brief=brief))
 
         for stat in s["player_counts"]:
             exp = pb.count(stat, r.MIN)
@@ -202,7 +231,8 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
                     continue
                 kind = "under"
             add(kind, stat, x, exp.mu, z,
-                f"{_fmt_count(stat, x)} ({z:+.1f}σ vs {exp.mu:.1f} expected)")
+                f"{_fmt_count(stat, x)} vs {_fmt_num(exp.mu)} expected ({rarity(z, 'player')})",
+                f"{_fmt_count(stat, x)} vs {_fmt_num(exp.mu)} expected ({odds(z)})")
 
         for stat, min_att in s["player_pcts"].items():
             m, a = PCT_PARTS[stat]
@@ -219,7 +249,8 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
             else:
                 continue
             add(kind, stat, rd[m] / rd[a], p, z,
-                f"{_fmt_pct(stat, rd[m], rd[a])} ({z:+.1f}σ vs {p:.0%} expected)")
+                f"{_fmt_pct(stat, rd[m], rd[a])} vs {p:.0%} expected ({rarity(z, 'player')})",
+                f"{_fmt_pct(stat, rd[m], rd[a])} vs {p:.0%} expected ({odds(z)})")
 
         for stat in s["league_counts"]:
             z, p = empirical_z(rd[stat], ctx.sorted_values[stat], "high", cap)
@@ -247,13 +278,16 @@ def _team_candidates(night, hist, cfg) -> list[Candidate]:
 
         def add(stat, value, expected, z_own, z_lg, p_lg, value_str):
             if abs(z_own) >= abs(z_lg):
-                z, why = z_own, f"{z_own:+.1f}σ vs team norm {_fmt_expected(stat, expected)}"
+                z = z_own
+                why = f"vs {_fmt_expected(stat, expected)} usual, {rarity(z_own, 'team')}"
+                brief = f"vs {_fmt_expected(stat, expected)} usual, {odds(z_own)}"
             else:
                 side = "top" if z_lg > 0 else "bottom"
-                z, why = z_lg, f"{side} {_fmt_share(p_lg)} of team games since {since}"
+                z = z_lg
+                why = brief = f"{side} {_fmt_share(p_lg)} of team games since {since}"
             out.append(Candidate("team", f"T:{r.TEAM_ID}", r.TEAM_ABBREVIATION, r.TEAM_ABBREVIATION,
                                  r.MATCHUP, stat, float(value), expected, z,
-                                 f"{value_str} ({why})", team_line(r)))
+                                 f"{value_str} ({why})", team_line(r), brief=f"{value_str} ({brief})"))
 
         for stat in s["team_counts"]:
             rate = team_rate(games, stat, tctx, cfg)
@@ -280,4 +314,4 @@ def _team_candidates(night, hist, cfg) -> list[Candidate]:
 def _fmt_expected(stat: str, expected) -> str:
     if expected is None or (isinstance(expected, float) and np.isnan(expected)):
         return "n/a"
-    return f"{expected:.0%}" if stat in PCT_PARTS else f"{expected:.1f}"
+    return f"{expected:.0%}" if stat in PCT_PARTS else _fmt_num(expected)

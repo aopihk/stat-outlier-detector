@@ -56,8 +56,20 @@ def test_context_lists_each_stat_once(cfg):
     from outliers.detect import Candidate
     def cand(kind, stat, z, reason):
         return Candidate(kind, "P:1", "A", "T", "T vs U", stat, 4, None, z, reason, "")
-    cands = [cand("personal", "STL", 3.2, "4 STL (+3.2σ)"), cand("league", "LEAGUE:STL", 2.1, "4 STL (top 2%)"),
+    cands = [cand("personal", "STL", 3.2, "4 STL (a 1-in-1,500 game for this player)"), cand("league", "LEAGUE:STL", 2.1, "4 STL (top 2%)"),
              cand("league", "LEAGUE:BLK", 2.3, "4 BLK (top 1%)")]
     item = select(cands, cfg).items[0]
-    assert item.reason == "4 STL (+3.2σ)"
+    assert item.reason == "4 STL (a 1-in-1,500 game for this player)"
     assert item.context == ["4 BLK (top 1%)"]
+
+
+def test_rarity_wording():
+    from outliers.detect import odds, rarity
+    assert odds(2.5) == "1-in-160"
+    assert odds(3.0) == "1-in-740"
+    assert odds(4.0) == "1-in-32,000"
+    assert odds(-3.0) == "1-in-740"
+    assert odds(8.0) == "rarer than 1-in-a-million"
+    assert rarity(8.0, "player") == "a rarer-than-1-in-a-million game for this player"
+    assert rarity(-2.7, "player") == "a 1-in-290 low for this player"
+    assert rarity(3.0, "team") == "a 1-in-740 game for this team"

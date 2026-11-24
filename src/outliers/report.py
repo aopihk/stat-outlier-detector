@@ -7,6 +7,7 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 
+from .detect import odds
 from .ranking import Selection
 
 KIND_LABELS = {"personal": "Personal", "league": "League", "team": "Team", "under": "Under"}
@@ -60,7 +61,7 @@ def to_markdown(d: date, sel: Selection, n_games: int, warnings: list[str], cfg:
     b = cfg["baseline"]
     lines += ["", f"<sub>Baseline: {b['method']}, {b['normalization']}, {b['minutes_basis']} minutes, "
               f"{b['distribution']} model, {b['seasons_back']} prior seasons. "
-              f"{sel.n_over_threshold} entries cleared the {cfg['general']['min_score']}σ threshold.</sub>", ""]
+              f"{sel.n_over_threshold} entries cleared the bar (about {odds(cfg['general']['min_score'])} or rarer).</sub>", ""]
     return "\n".join(lines)
 
 
