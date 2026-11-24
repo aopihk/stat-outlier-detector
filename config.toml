@@ -1,0 +1,121 @@
+# NBA Stat Outlier Detector configuration.
+# Every value can be overridden per run with:  --set section.key=value
+# Scores are on a z-scale (standard deviations of "surprise").
+
+[general]
+top_n = 10
+timezone = "America/New_York"   # "last night" is the previous date in this timezone
+min_score = 2.5                 # an item must reach this score to make the list
+context_score = 2.0             # secondary stats at/above this are shown as context
+quiet_night_count = 3           # if nothing clears min_score, show this many anyway
+
+[kinds]
+# Ranking weight per outlier kind (score = |z| * weight) and max items per kind.
+weights = { personal = 1.0, league = 0.9, team = 0.9, under = 1.0 }
+caps = { personal = 10, league = 10, team = 3, under = 4 }
+
+[stats]
+# Player counting stats scored against the player's own baseline.
+player_counts = ["PTS", "REB", "AST", "STL", "BLK", "FG3M", "OREB", "TOV"]
+# Player shooting stats -> minimum attempts in the game to be scored.
+player_pcts = { FG_PCT = 10, FG3_PCT = 8, FT_PCT = 10 }
+# High values of these are bad nights (classified as underperformance).
+negative_stats = ["TOV"]
+# Minimum raw value for a high personal outlier to count (keeps garbage-time noise out).
+personal_min_value = { PTS = 20, REB = 12, AST = 9, STL = 5, BLK = 5, FG3M = 5, OREB = 6, TOV = 7 }
+# Player stats compared with the league-wide distribution of player games (high tail only).
+league_counts = ["PTS", "REB", "AST", "STL", "BLK", "FG3M"]
+# Team stats (both tails).
+team_counts = ["PTS", "REB", "OREB", "AST", "STL", "BLK", "TOV", "FG3M"]
+team_pcts = { FG_PCT = 50, FG3_PCT = 15, FT_PCT = 10 }
+team_margins = ["REB_MARGIN"]
+
+[baseline]
+# method: bayesian | exp_decay | fixed_weights | season_only
+method = "bayesian"
+seasons_back = 2                    # prior seasons used (0-3)
+season_decay = [1.0, 0.5, 0.25]     # weight for last season, two seasons ago, three ago
+recency_half_life_games = 15        # within-season recency weighting; 0 = off
+normalization = "per_minute"        # per_minute | per_game
+minutes_basis = "expected"          # expected | actual
+expected_minutes_window = 5         # recent games used for expected minutes
+expected_minutes_recent_weight = 0.6
+distribution = "count"              # count (negative binomial / beta-binomial) | normal
+thin_history_prior = "cohort"       # cohort | league | none
+min_games_own = 8                   # only used when thin_history_prior = "none"
+exp_decay_half_life_games = 25      # for method = exp_decay
+fixed_weights = [0.6, 0.3, 0.1]     # for method = fixed_weights: this season, last, two ago
+fill_strength_minutes = 150         # cohort/league fill strength for non-bayesian methods
+fill_strength_attempts = 60
+minutes_tiers = [15, 25, 32]        # cohort minutes tiers (MPG boundaries)
+dispersion_prior_games = 20         # shrink player overdispersion toward league value
+pct_concentration = 150             # game-to-game spread of shooting % (higher = tighter)
+max_abs_z = 8.0
+# Assumed minutes per game when converting minute-based strengths for normalization = per_game.
+per_game_minutes_equiv = 30
+
+# Prior strength "k": how many minutes of current-season play it takes to
+# weigh as much as the prior. Higher = trust history longer.
+[baseline.prior_strength_minutes]
+PTS = 400
+REB = 300
+AST = 300
+OREB = 500
+TOV = 500
+STL = 800
+BLK = 800
+FG3M = 800
+
+# Same idea for shooting percentages, in attempts.
+[baseline.prior_strength_attempts]
+FG_PCT = 300
+FG3_PCT = 250
+FT_PCT = 150
+
+# Minimum std dev used by distribution = "normal".
+[baseline.std_floor]
+PTS = 4.0
+REB = 2.5
+AST = 2.0
+OREB = 1.2
+TOV = 1.2
+STL = 1.0
+BLK = 1.0
+FG3M = 1.2
+
+[team]
+prior_strength_games = 10           # teams change a lot between seasons, so weaker prior
+league_min_attempts_scale = 1.0
+
+[underperformance]
+min_expected_minutes = 25           # only established players
+min_expected = { PTS = 15, REB = 8, AST = 6 }
+pct_stats = ["FG_PCT", "FG3_PCT"]
+early_exit_fraction = 0.5           # played < this share of expected minutes -> early exit
+early_exit_min_expected = 20
+
+[milestones]
+# [threshold, score] pairs, highest threshold first.
+PTS = [[60, 6.0], [50, 5.0], [45, 3.6]]
+REB = [[25, 4.5], [20, 3.0]]
+AST = [[20, 5.0], [17, 3.8], [15, 3.0]]
+STL = [[10, 6.0], [7, 3.6]]
+BLK = [[10, 6.0], [7, 3.4]]
+FG3M = [[12, 5.0], [10, 3.8]]
+triple_double = 2.0              # below min_score: shown as context, not listed on its own
+triple_double_30 = 3.3
+triple_double_40 = 4.5
+twenty_twenty = 3.4
+quadruple_double = 6.5
+five_by_five = 5.0
+
+[data]
+request_sleep_seconds = 0.8
+retries = 4
+timeout_seconds = 30
+wait_for_data_minutes = 10          # if games are Final but stats are missing, wait and retry
+wait_for_data_attempts = 3
+
+[git]
+commit = true
+push = false
