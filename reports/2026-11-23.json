@@ -74,14 +74,15 @@
       "value": 21.0,
       "expected": 3.9152338307060157,
       "z": 3.4051097134758344,
-      "reason": "21 PTS (+3.4\u03c3 vs 3.9 expected)",
+      "reason": "21 PTS vs 3.9 expected (a 1-in-3,000 game for this player)",
       "line": "21 pts, 12 reb, 4 ast \u00b7 8-14 FG, 1-3 3PT \u00b7 24 min",
       "tags": [],
       "score": 3.4051097134758344,
       "context": [
-        "6 OREB (+3.2\u03c3 vs 0.7 expected)",
-        "12 REB (+3.1\u03c3 vs 2.6 expected)"
+        "6 OREB vs 0.7 expected (1-in-1,700)",
+        "12 REB vs 2.6 expected (1-in-1,100)"
       ],
+      "brief": "21 PTS vs 3.9 expected (1-in-3,000)",
       "rank": 1
     },
     {
@@ -94,11 +95,12 @@
       "value": 6.0,
       "expected": 1.0783465003765171,
       "z": 3.0254809947642896,
-      "reason": "6 BLK (+3.0\u03c3 vs 1.1 expected)",
+      "reason": "6 BLK vs 1.1 expected (a 1-in-810 game for this player)",
       "line": "8 pts, 10 reb, 3 ast, 6 blk \u00b7 3-7 FG, 1-1 3PT \u00b7 29 min",
       "tags": [],
       "score": 3.0254809947642896,
       "context": [],
+      "brief": "6 BLK vs 1.1 expected (1-in-810)",
       "rank": 2
     },
     {
@@ -111,13 +113,14 @@
       "value": 27.0,
       "expected": 9.927777720933875,
       "z": 2.696512706006208,
-      "reason": "27 PTS (+2.7\u03c3 vs 9.9 expected)",
+      "reason": "27 PTS vs 9.9 expected (a 1-in-290 game for this player)",
       "line": "27 pts, 11 reb, 1 ast \u00b7 9-12 FG, 5-6 3PT \u00b7 28 min",
       "tags": [],
       "score": 2.696512706006208,
       "context": [
-        "5 3PM (+2.0\u03c3 vs 1.6 expected)"
+        "5 3PM vs 1.6 expected (1-in-45)"
       ],
+      "brief": "27 PTS vs 9.9 expected (1-in-290)",
       "rank": 3
     },
     {
@@ -130,15 +133,16 @@
       "value": 25.0,
       "expected": 6.42599174428762,
       "z": 2.538579692083098,
-      "reason": "25 PTS (+2.5\u03c3 vs 6.4 expected)",
+      "reason": "25 PTS vs 6.4 expected (a 1-in-180 game for this player)",
       "line": "25 pts, 2 reb, 3 ast \u00b7 9-12 FG, 6-8 3PT \u00b7 25 min",
       "tags": [
         "Rookie"
       ],
       "score": 2.538579692083098,
       "context": [
-        "6 3PM (+2.4\u03c3 vs 1.0 expected)"
+        "6 3PM vs 1.0 expected (1-in-130)"
       ],
+      "brief": "25 PTS vs 6.4 expected (1-in-180)",
       "rank": 4
     }
   ]
