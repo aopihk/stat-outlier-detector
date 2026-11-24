@@ -1,0 +1,145 @@
+{
+  "date": "2026-11-23",
+  "games": 10,
+  "quiet_night": false,
+  "n_over_threshold": 4,
+  "warnings": [],
+  "baseline": {
+    "method": "bayesian",
+    "seasons_back": 2,
+    "season_decay": [
+      1.0,
+      0.5,
+      0.25
+    ],
+    "recency_half_life_games": 15,
+    "normalization": "per_minute",
+    "minutes_basis": "expected",
+    "expected_minutes_window": 5,
+    "expected_minutes_recent_weight": 0.6,
+    "distribution": "count",
+    "thin_history_prior": "cohort",
+    "min_games_own": 8,
+    "exp_decay_half_life_games": 25,
+    "fixed_weights": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "fill_strength_minutes": 150,
+    "fill_strength_attempts": 60,
+    "minutes_tiers": [
+      15,
+      25,
+      32
+    ],
+    "dispersion_prior_games": 20,
+    "pct_concentration": 150,
+    "max_abs_z": 8.0,
+    "per_game_minutes_equiv": 30,
+    "prior_strength_minutes": {
+      "PTS": 400,
+      "REB": 300,
+      "AST": 300,
+      "OREB": 500,
+      "TOV": 500,
+      "STL": 800,
+      "BLK": 800,
+      "FG3M": 800
+    },
+    "prior_strength_attempts": {
+      "FG_PCT": 300,
+      "FG3_PCT": 250,
+      "FT_PCT": 150
+    },
+    "std_floor": {
+      "PTS": 4.0,
+      "REB": 2.5,
+      "AST": 2.0,
+      "OREB": 1.2,
+      "TOV": 1.2,
+      "STL": 1.0,
+      "BLK": 1.0,
+      "FG3M": 1.2
+    }
+  },
+  "items": [
+    {
+      "kind": "personal",
+      "entity": "P:1642271",
+      "name": "Kyle Filipowski",
+      "team": "UTA",
+      "matchup": "UTA @ LAL",
+      "stat": "PTS",
+      "value": 21.0,
+      "expected": 3.9152338307060157,
+      "z": 3.4051097134758344,
+      "reason": "21 PTS (+3.4\u03c3 vs 3.9 expected)",
+      "line": "21 pts, 12 reb, 4 ast \u00b7 8-14 FG, 1-3 3PT \u00b7 24 min",
+      "tags": [],
+      "score": 3.4051097134758344,
+      "context": [
+        "6 OREB (+3.2\u03c3 vs 0.7 expected)",
+        "12 REB (+3.1\u03c3 vs 2.6 expected)"
+      ],
+      "rank": 1
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1631212",
+      "name": "Peyton Watson",
+      "team": "CLE",
+      "matchup": "CLE @ CHI",
+      "stat": "BLK",
+      "value": 6.0,
+      "expected": 1.0783465003765171,
+      "z": 3.0254809947642896,
+      "reason": "6 BLK (+3.0\u03c3 vs 1.1 expected)",
+      "line": "8 pts, 10 reb, 3 ast, 6 blk \u00b7 3-7 FG, 1-1 3PT \u00b7 29 min",
+      "tags": [],
+      "score": 3.0254809947642896,
+      "context": [],
+      "rank": 2
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1626167",
+      "name": "Myles Turner",
+      "team": "MIL",
+      "matchup": "MIL @ TOR",
+      "stat": "PTS",
+      "value": 27.0,
+      "expected": 9.927777720933875,
+      "z": 2.696512706006208,
+      "reason": "27 PTS (+2.7\u03c3 vs 9.9 expected)",
+      "line": "27 pts, 11 reb, 1 ast \u00b7 9-12 FG, 5-6 3PT \u00b7 28 min",
+      "tags": [],
+      "score": 2.696512706006208,
+      "context": [
+        "5 3PM (+2.0\u03c3 vs 1.6 expected)"
+      ],
+      "rank": 3
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1643515",
+      "name": "Christian Anderson",
+      "team": "CHA",
+      "matchup": "CHA vs. MEM",
+      "stat": "PTS",
+      "value": 25.0,
+      "expected": 6.42599174428762,
+      "z": 2.538579692083098,
+      "reason": "25 PTS (+2.5\u03c3 vs 6.4 expected)",
+      "line": "25 pts, 2 reb, 3 ast \u00b7 9-12 FG, 6-8 3PT \u00b7 25 min",
+      "tags": [
+        "Rookie"
+      ],
+      "score": 2.538579692083098,
+      "context": [
+        "6 3PM (+2.4\u03c3 vs 1.0 expected)"
+      ],
+      "rank": 4
+    }
+  ]
+}
