@@ -1,0 +1,122 @@
+{
+  "date": "2026-11-24",
+  "games": 3,
+  "quiet_night": true,
+  "n_over_threshold": 0,
+  "warnings": [],
+  "baseline": {
+    "method": "bayesian",
+    "seasons_back": 2,
+    "season_decay": [
+      1.0,
+      0.5,
+      0.25
+    ],
+    "recency_half_life_games": 15,
+    "normalization": "per_minute",
+    "minutes_basis": "expected",
+    "expected_minutes_window": 5,
+    "expected_minutes_recent_weight": 0.6,
+    "distribution": "count",
+    "thin_history_prior": "cohort",
+    "min_games_own": 8,
+    "exp_decay_half_life_games": 25,
+    "fixed_weights": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "fill_strength_minutes": 150,
+    "fill_strength_attempts": 60,
+    "minutes_tiers": [
+      15,
+      25,
+      32
+    ],
+    "dispersion_prior_games": 20,
+    "pct_concentration": 150,
+    "max_abs_z": 8.0,
+    "per_game_minutes_equiv": 30,
+    "prior_strength_minutes": {
+      "PTS": 400,
+      "REB": 300,
+      "AST": 300,
+      "OREB": 500,
+      "TOV": 500,
+      "STL": 800,
+      "BLK": 800,
+      "FG3M": 800
+    },
+    "prior_strength_attempts": {
+      "FG_PCT": 300,
+      "FG3_PCT": 250,
+      "FT_PCT": 150
+    },
+    "std_floor": {
+      "PTS": 4.0,
+      "REB": 2.5,
+      "AST": 2.0,
+      "OREB": 1.2,
+      "TOV": 1.2,
+      "STL": 1.0,
+      "BLK": 1.0,
+      "FG3M": 1.2
+    }
+  },
+  "items": [
+    {
+      "kind": "league",
+      "entity": "P:1628369",
+      "name": "Jayson Tatum",
+      "team": "BOS",
+      "matchup": "BOS @ WAS",
+      "stat": "LEAGUE:PTS",
+      "value": 41.0,
+      "expected": null,
+      "z": 2.6394642580076164,
+      "reason": "41 PTS (top 0.42% of player games; season high, averaging 26.4 this season)",
+      "line": "41 pts, 6 reb, 8 ast \u00b7 13-25 FG, 6-15 3PT \u00b7 37 min",
+      "tags": [],
+      "score": 2.375517832206855,
+      "context": [],
+      "brief": "41 PTS (top 0.42% of player games)",
+      "rank": 1
+    },
+    {
+      "kind": "league",
+      "entity": "P:1628997",
+      "name": "Caleb Martin",
+      "team": "DAL",
+      "matchup": "DAL @ DEN",
+      "stat": "LEAGUE:STL",
+      "value": 5.0,
+      "expected": null,
+      "z": 2.581351105079789,
+      "reason": "5 STL (top 0.49% of player games; highest in 3 seasons, averaging 1.1 this season)",
+      "line": "13 pts, 4 reb, 4 ast, 5 stl \u00b7 5-8 FG, 3-6 3PT \u00b7 30 min",
+      "tags": [],
+      "score": 2.32321599457181,
+      "context": [],
+      "brief": "5 STL (top 0.49% of player games)",
+      "rank": 2
+    },
+    {
+      "kind": "league",
+      "entity": "P:1642843",
+      "name": "Cooper Flagg",
+      "team": "DAL",
+      "matchup": "DAL @ DEN",
+      "stat": "LEAGUE:AST",
+      "value": 12.0,
+      "expected": null,
+      "z": 2.3915304057677407,
+      "reason": "12 AST (top 0.84% of player games; ties season high, averaging 6.4 this season)",
+      "line": "24 pts, 6 reb, 12 ast \u00b7 8-17 FG, 1-4 3PT \u00b7 31 min",
+      "tags": [],
+      "score": 2.152377365190967,
+      "context": [],
+      "brief": "12 AST (top 0.84% of player games)",
+      "rank": 3
+    }
+  ]
+}
