@@ -184,6 +184,54 @@ def detect_night(d: date, player_logs: pd.DataFrame, team_logs: pd.DataFrame,
     return NightResult(d, cands, sorted(night_p["GAME_ID"].unique()), len(night_p))
 
 
+def stat_note(games: pd.DataFrame, stat: str, x: float, low: bool, career_window: bool,
+              n_seasons: int) -> str:
+    """Plain-language context for a count stat, e.g. "season high, averaging 8.3 this season".
+
+    `games` is the player's history before this game. A "career high" is only claimed when
+    the whole career is inside the data window (`career_window`); otherwise the claim is
+    limited to the seasons we have.
+    """
+    if games.empty:
+        return ""
+    cur = games[games["SEASON_IDX"] == 0][stat]
+    parts = []
+    if low:
+        if len(cur) >= 5 and x < cur.min():
+            parts.append("season low")
+        elif len(cur) >= 5 and x == cur.min():
+            parts.append("ties season low")
+    else:
+        if n_seasons > 1 and len(games) >= 10 and x > games[stat].max():
+            parts.append("career high" if career_window else f"highest in {n_seasons} seasons")
+        elif len(cur) >= 5 and x > cur.max():
+            parts.append("season high")
+        elif len(cur) >= 5 and x == cur.max():
+            parts.append("ties season high")
+    if len(cur) >= 3:
+        parts.append(f"averaging {cur.mean():.1f} this season")
+    else:
+        prior = games[games["SEASON_IDX"] >= 1]
+        last = prior[prior["SEASON_IDX"] == prior["SEASON_IDX"].min()][stat]
+        if len(last) >= 10 and prior["SEASON_IDX"].min() == 1:
+            parts.append(f"averaged {last.mean():.1f} last season")
+    return ", ".join(parts)
+
+
+def pct_note(games: pd.DataFrame, stat: str) -> str:
+    """e.g. "28% 3PT this season (19-69)"."""
+    m, a = PCT_PARTS[stat]
+    cur = games[games["SEASON_IDX"] == 0] if not games.empty else games
+    if cur.empty or cur[a].sum() < 10:
+        return ""
+    makes, attempts = int(cur[m].sum()), int(cur[a].sum())
+    return f"{makes / attempts:.0%} {PCT_LABELS[stat]} this season ({makes}-{attempts})"
+
+
+def _with_note(why: str, note: str) -> str:
+    return f"{why}; {note}" if note else why
+
+
 def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
     b, s, u = cfg["baseline"], cfg["stats"], cfg["underperformance"]
     cap, dist = b["max_abs_z"], b["distribution"]
@@ -192,12 +240,17 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
     empty = hist.iloc[0:0]
     from_year = {int(r.PLAYER_ID): r.FROM_YEAR for r in players.itertuples()}
     start_year = season_start_year(d)
+    n_seasons = cfg["baseline"]["seasons_back"] + 1
+    window_start = start_year - cfg["baseline"]["seasons_back"]
 
     out: list[Candidate] = []
     for r in night.itertuples(index=False):
         rd = r._asdict()
         pid = int(r.PLAYER_ID)
-        pb = PlayerBaseline(groups.get(pid, empty), pid, ctx, cfg)
+        games = groups.get(pid, empty)
+        pb = PlayerBaseline(games, pid, ctx, cfg)
+        fy = from_year.get(pid)
+        career_window = fy is not None and not pd.isna(fy) and fy >= window_start
         em = pb.expected_minutes
         tags = []
         if from_year.get(pid) == start_year or (pb.n_prior == 0 and pb.n_current < 10):
@@ -231,7 +284,8 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
                     continue
                 kind = "under"
             add(kind, stat, x, exp.mu, z,
-                f"{_fmt_count(stat, x)} vs {_fmt_num(exp.mu)} expected ({rarity(z, 'player')})",
+                f"{_fmt_count(stat, x)} vs {_fmt_num(exp.mu)} expected "
+                f"({_with_note(rarity(z, 'player'), stat_note(games, stat, x, z < 0, career_window, n_seasons))})",
                 f"{_fmt_count(stat, x)} vs {_fmt_num(exp.mu)} expected ({odds(z)})")
 
         for stat, min_att in s["player_pcts"].items():
@@ -249,13 +303,16 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
             else:
                 continue
             add(kind, stat, rd[m] / rd[a], p, z,
-                f"{_fmt_pct(stat, rd[m], rd[a])} vs {p:.0%} expected ({rarity(z, 'player')})",
+                f"{_fmt_pct(stat, rd[m], rd[a])} vs {p:.0%} expected "
+                f"({_with_note(rarity(z, 'player'), pct_note(games, stat))})",
                 f"{_fmt_pct(stat, rd[m], rd[a])} vs {p:.0%} expected ({odds(z)})")
 
         for stat in s["league_counts"]:
             z, p = empirical_z(rd[stat], ctx.sorted_values[stat], "high", cap)
             if z > 0:
                 add("league", f"LEAGUE:{stat}", rd[stat], None, z,
+                    f"{_fmt_count(stat, rd[stat])} (top {_fmt_share(p)} of player games"
+                    f"{'; ' + n if (n := stat_note(games, stat, rd[stat], False, career_window, n_seasons)) else ''})",
                     f"{_fmt_count(stat, rd[stat])} (top {_fmt_share(p)} of player games)")
 
         for name, score in milestones(rd, cfg["milestones"]):

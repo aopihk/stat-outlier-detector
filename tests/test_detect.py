@@ -73,3 +73,34 @@ def test_rarity_wording():
     assert rarity(8.0, "player") == "a rarer-than-1-in-a-million game for this player"
     assert rarity(-2.7, "player") == "a 1-in-290 low for this player"
     assert rarity(3.0, "team") == "a 1-in-740 game for this team"
+
+
+def _history(cur_pts, prior_pts=()):
+    import pandas as pd
+    rows = [(1, p, 10, 25) for p in prior_pts] + [(0, p, 10, 25) for p in cur_pts]
+    return pd.DataFrame(rows, columns=["SEASON_IDX", "PTS", "FG3A", "FG3M"])
+
+
+def test_stat_note_season_high_and_average():
+    from outliers.detect import stat_note
+    games = _history([11, 12, 0, 6, 4, 10, 13, 14], prior_pts=[30] * 10)
+    assert stat_note(games, "PTS", 27, False, False, 3) == "season high, averaging 8.8 this season"
+
+
+def test_stat_note_only_claims_career_high_inside_window():
+    from outliers.detect import stat_note
+    games = _history([10] * 6, prior_pts=[20] * 10)
+    assert stat_note(games, "PTS", 31, False, True, 3).startswith("career high")
+    assert stat_note(games, "PTS", 31, False, False, 3).startswith("highest in 3 seasons")
+
+
+def test_stat_note_lows_and_early_season():
+    from outliers.detect import stat_note
+    assert stat_note(_history([20, 22, 25, 19, 30]), "PTS", 4, True, False, 3) == \
+        "season low, averaging 23.2 this season"
+    # Two games in: no season claims; fall back to last season's average.
+    early = _history([20, 22], prior_pts=[18] * 12)
+    assert stat_note(early, "PTS", 21, False, False, 3) == "averaged 18.0 last season"
+    assert stat_note(early, "PTS", 35, False, False, 3) == "highest in 3 seasons, averaged 18.0 last season"
+    import pandas as pd
+    assert stat_note(pd.DataFrame(columns=["SEASON_IDX", "PTS"]), "PTS", 30, False, False, 3) == ""
