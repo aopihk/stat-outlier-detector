@@ -1,0 +1,201 @@
+{
+  "date": "2026-11-25",
+  "games": 9,
+  "quiet_night": false,
+  "n_over_threshold": 7,
+  "warnings": [],
+  "baseline": {
+    "method": "bayesian",
+    "seasons_back": 2,
+    "season_decay": [
+      1.0,
+      0.5,
+      0.25
+    ],
+    "recency_half_life_games": 15,
+    "normalization": "per_minute",
+    "minutes_basis": "expected",
+    "expected_minutes_window": 5,
+    "expected_minutes_recent_weight": 0.6,
+    "distribution": "count",
+    "thin_history_prior": "cohort",
+    "min_games_own": 8,
+    "exp_decay_half_life_games": 25,
+    "fixed_weights": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "fill_strength_minutes": 150,
+    "fill_strength_attempts": 60,
+    "minutes_tiers": [
+      15,
+      25,
+      32
+    ],
+    "dispersion_prior_games": 20,
+    "pct_concentration": 150,
+    "max_abs_z": 8.0,
+    "per_game_minutes_equiv": 30,
+    "prior_strength_minutes": {
+      "PTS": 400,
+      "REB": 300,
+      "AST": 300,
+      "OREB": 500,
+      "TOV": 500,
+      "STL": 800,
+      "BLK": 800,
+      "FG3M": 800
+    },
+    "prior_strength_attempts": {
+      "FG_PCT": 300,
+      "FG3_PCT": 250,
+      "FT_PCT": 150
+    },
+    "std_floor": {
+      "PTS": 4.0,
+      "REB": 2.5,
+      "AST": 2.0,
+      "OREB": 1.2,
+      "TOV": 1.2,
+      "STL": 1.0,
+      "BLK": 1.0,
+      "FG3M": 1.2
+    }
+  },
+  "items": [
+    {
+      "kind": "under",
+      "entity": "P:1627759",
+      "name": "Jaylen Brown",
+      "team": "PHI",
+      "matchup": "PHI vs. MIA",
+      "stat": "PTS",
+      "value": 6.0,
+      "expected": 23.251227084620943,
+      "z": -3.0653133524084755,
+      "reason": "6 PTS vs 23 expected (a 1-in-920 low for this player; season low, averaging 22.4 this season)",
+      "line": "6 pts, 1 reb, 1 ast \u00b7 2-8 FG, 0-1 3PT \u00b7 17 min",
+      "tags": [],
+      "score": 3.0653133524084755,
+      "context": [],
+      "brief": "6 PTS vs 23 expected (1-in-920)",
+      "rank": 1
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1630631",
+      "name": "Jose Alvarado",
+      "team": "NYK",
+      "matchup": "NYK vs. CLE",
+      "stat": "PTS",
+      "value": 21.0,
+      "expected": 4.25592326175689,
+      "z": 2.9753012857871837,
+      "reason": "21 PTS vs 4.3 expected (a 1-in-680 game for this player; season high, averaging 3.3 this season)",
+      "line": "21 pts, 1 reb, 3 ast \u00b7 8-10 FG, 5-7 3PT \u00b7 19 min",
+      "tags": [],
+      "score": 2.9753012857871837,
+      "context": [
+        "5 3PM vs 0.8 expected (1-in-180)",
+        "8-10 FG (80%) vs 41% expected (1-in-62)"
+      ],
+      "brief": "21 PTS vs 4.3 expected (1-in-680)",
+      "rank": 2
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1629001",
+      "name": "De'Anthony Melton",
+      "team": "GSW",
+      "matchup": "GSW vs. SAC",
+      "stat": "FG3M",
+      "value": 8.0,
+      "expected": 1.5095355622284936,
+      "z": 2.9008602164191677,
+      "reason": "8 3PM vs 1.5 expected (a 1-in-540 game for this player; highest in 3 seasons, averaging 1.9 this season)",
+      "line": "24 pts, 4 reb, 7 ast \u00b7 8-14 FG, 8-12 3PT \u00b7 27 min",
+      "tags": [],
+      "score": 2.9008602164191677,
+      "context": [
+        "8-12 3PT (67%) vs 33% expected (1-in-44)"
+      ],
+      "brief": "8 3PM vs 1.5 expected (1-in-540)",
+      "rank": 3
+    },
+    {
+      "kind": "under",
+      "entity": "P:1628970",
+      "name": "Miles Bridges",
+      "team": "PHX",
+      "matchup": "PHX @ HOU",
+      "stat": "PTS",
+      "value": 2.0,
+      "expected": 15.49405887988556,
+      "z": -2.800078433799369,
+      "reason": "2 PTS vs 15 expected (a 1-in-390 low for this player; season low, averaging 14.8 this season)",
+      "line": "2 pts, 8 reb, 4 ast \u00b7 1-8 FG, 0-6 3PT \u00b7 25 min",
+      "tags": [],
+      "score": 2.800078433799369,
+      "context": [],
+      "brief": "2 PTS vs 15 expected (1-in-390)",
+      "rank": 4
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1630164",
+      "name": "James Wiseman",
+      "team": "NYK",
+      "matchup": "NYK vs. CLE",
+      "stat": "OREB",
+      "value": 6.0,
+      "expected": 0.9040152970539793,
+      "z": 2.681642776365049,
+      "reason": "6 OREB vs 0.9 expected (a 1-in-270 game for this player; highest in 3 seasons, averaging 1.3 this season)",
+      "line": "6 pts, 7 reb, 0 ast \u00b7 3-5 FG \u00b7 6 min",
+      "tags": [],
+      "score": 2.681642776365049,
+      "context": [],
+      "brief": "6 OREB vs 0.9 expected (1-in-270)",
+      "rank": 5
+    },
+    {
+      "kind": "team",
+      "entity": "T:1610612746",
+      "name": "LAC",
+      "team": "LAC",
+      "matchup": "LAC @ MEM",
+      "stat": "STL",
+      "value": 1.0,
+      "expected": 8.557503699978684,
+      "z": -2.8869777147002917,
+      "reason": "1 STL (vs 8.6 usual, a 1-in-510 low for this team)",
+      "line": "97-115 L \u00b7 33-85 FG, 6-30 3PT, 12 TOV, 48 REB",
+      "tags": [],
+      "score": 2.5982799432302626,
+      "context": [],
+      "brief": "1 STL (vs 8.6 usual, 1-in-510)",
+      "rank": 6
+    },
+    {
+      "kind": "league",
+      "entity": "P:1641705",
+      "name": "Victor Wembanyama",
+      "team": "SAS",
+      "matchup": "SAS @ POR",
+      "stat": "LEAGUE:PTS",
+      "value": 44.0,
+      "expected": null,
+      "z": 2.8841234409747747,
+      "reason": "44 PTS (top 0.2% of player games; averaging 29.9 this season)",
+      "line": "44 pts, 16 reb, 3 ast \u00b7 17-30 FG, 3-9 3PT \u00b7 35 min",
+      "tags": [],
+      "score": 2.5957110968772974,
+      "context": [
+        "16 REB (top 0.72% of player games)"
+      ],
+      "brief": "44 PTS (top 0.2% of player games)",
+      "rank": 7
+    }
+  ]
+}
