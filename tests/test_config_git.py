@@ -1,7 +1,11 @@
 import subprocess
+import time
+
+import pytest
 
 from outliers.config import load_config
 from outliers.gitops import commit_reports
+from outliers.providers.nba_api_provider import run_with_deadline
 
 
 def test_overrides_parse_types():
@@ -29,3 +33,13 @@ def test_commit_only_report_files(tmp_path):
     assert committed == ["reports/2026-11-23.md"]
     # Rerunning with identical content is a no-op, not an error.
     assert commit_reports(tmp_path, [report], "Outliers for 2026-11-23", push=False)
+
+
+def test_run_with_deadline_abandons_stalled_call():
+    assert run_with_deadline(lambda: 42, 1) == 42
+    start = time.monotonic()
+    with pytest.raises(TimeoutError):
+        run_with_deadline(lambda: time.sleep(5), 0.2)
+    assert time.monotonic() - start < 1
+    with pytest.raises(ValueError):
+        run_with_deadline(lambda: int("x"), 1)

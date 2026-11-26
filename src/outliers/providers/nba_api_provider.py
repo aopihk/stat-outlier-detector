@@ -1,6 +1,8 @@
 """stats.nba.com via the nba_api package."""
 
 import logging
+import queue
+import threading
 import time
 from datetime import date
 
@@ -11,18 +13,44 @@ from .base import LOG_COLUMNS, PLAYER_COLUMNS, DataProvider, GameStatus, Provide
 log = logging.getLogger(__name__)
 
 
+def run_with_deadline(fn, deadline: float):
+    """Run fn() with a hard wall-clock limit.
+
+    requests' timeout only bounds the wait between bytes, so a stalled or trickling
+    stats.nba.com response can hang for many minutes. The call runs in a daemon thread
+    that is abandoned (not killed) if it overruns, so it can't keep the process alive.
+    """
+    out: queue.Queue = queue.Queue(maxsize=1)
+
+    def target():
+        try:
+            out.put((True, fn()))
+        except BaseException as e:
+            out.put((False, e))
+
+    threading.Thread(target=target, daemon=True).start()
+    try:
+        ok, value = out.get(timeout=deadline)
+    except queue.Empty:
+        raise TimeoutError(f"no complete response within {deadline:g}s") from None
+    if ok:
+        return value
+    raise value
+
+
 class NbaApiProvider(DataProvider):
-    def __init__(self, timeout: int = 30, retries: int = 4, sleep: float = 0.8):
+    def __init__(self, timeout: int = 30, retries: int = 4, sleep: float = 0.8, deadline: float = 90):
         self.timeout = timeout
         self.retries = retries
         self.sleep = sleep
+        self.deadline = deadline
 
     def _call(self, what: str, fn):
         last = None
         for attempt in range(self.retries):
             time.sleep(self.sleep)
             try:
-                return fn()
+                return run_with_deadline(fn, self.deadline)
             except Exception as e:  # nba_api surfaces requests/JSON errors directly
                 last = e
                 wait = 2 ** attempt * 2

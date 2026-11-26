@@ -9,6 +9,7 @@ def get_provider(cfg: dict) -> DataProvider:
     data = cfg["data"]
     return NbaApiProvider(
         timeout=data["timeout_seconds"],
+        deadline=data.get("request_deadline_seconds", 90),
         retries=data["retries"],
         sleep=data["request_sleep_seconds"],
     )

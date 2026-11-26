@@ -112,7 +112,8 @@ five_by_five = 5.0
 [data]
 request_sleep_seconds = 0.8
 retries = 4
-timeout_seconds = 30
+timeout_seconds = 30                # per socket read
+request_deadline_seconds = 90       # hard limit per request; a stalled call is abandoned and retried
 wait_for_data_minutes = 10          # if games are Final but stats are missing, wait and retry
 wait_for_data_attempts = 3
 
