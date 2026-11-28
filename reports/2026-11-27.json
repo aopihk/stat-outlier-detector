@@ -79,8 +79,7 @@
       "tags": [],
       "score": 3.224330215842351,
       "context": [
-        "20-20 game (22 PTS, 23 REB)",
-        "23 REB"
+        "20-20 game (22 PTS, 23 REB)"
       ],
       "brief": "23 REB (top 0.017% of player games)",
       "rank": 1
@@ -99,9 +98,7 @@
       "line": "11 pts, 22 reb, 3 ast \u00b7 4-8 FG, 0-1 3PT \u00b7 33 min",
       "tags": [],
       "score": 3.0230294452937327,
-      "context": [
-        "22 REB"
-      ],
+      "context": [],
       "brief": "22 REB (top 0.039% of player games)",
       "rank": 2
     },
@@ -168,18 +165,16 @@
       "name": "Nikola Joki\u0107",
       "team": "DEN",
       "matchup": "DEN @ UTA",
-      "stat": "MILESTONE:15 AST",
-      "value": 0.0,
+      "stat": "MILESTONE:AST",
+      "value": 15.0,
       "expected": null,
       "z": 3.0,
-      "reason": "15 AST",
+      "reason": "15 AST (top 0.18% of player games; season high, averaging 8.9 this season)",
       "line": "17 pts, 9 reb, 15 ast \u00b7 7-19 FG, 2-3 3PT \u00b7 36 min",
       "tags": [],
       "score": 2.7,
-      "context": [
-        "15 AST (top 0.18% of player games)"
-      ],
-      "brief": "15 AST",
+      "context": [],
+      "brief": "15 AST (top 0.18% of player games)",
       "rank": 6
     },
     {

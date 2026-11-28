@@ -13,7 +13,7 @@ class Selection:
 
 
 def _base_stat(stat: str) -> str:
-    return stat.removeprefix("LEAGUE:")
+    return stat.removeprefix("LEAGUE:").removeprefix("MILESTONE:")
 
 
 def select(cands: list[Candidate], cfg: dict, top_n: int | None = None) -> Selection:
@@ -30,8 +30,14 @@ def select(cands: list[Candidate], cfg: dict, top_n: int | None = None) -> Selec
     for group in by_entity.values():
         group.sort(key=lambda c: c.score, reverse=True)
         top = group[0]
-        # A stat appears once: "BLK" and "LEAGUE:BLK" describe the same number.
+        # A stat appears once: "BLK", "LEAGUE:BLK" and "MILESTONE:BLK" describe the same number.
         seen = {_base_stat(top.stat)}
+        if top.stat.startswith("MILESTONE:"):
+            # A milestone like "15 AST" says nothing on its own; borrow the explanation
+            # from the same stat's personal/league entry, keeping the milestone's score.
+            same = next((c for c in group[1:] if _base_stat(c.stat) == _base_stat(top.stat)), None)
+            if same:
+                top.value, top.expected, top.reason, top.brief = same.value, same.expected, same.reason, same.brief
         top.context = []
         for c in group[1:]:
             if c.score >= g["context_score"] and _base_stat(c.stat) not in seen:

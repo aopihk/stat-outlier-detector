@@ -142,29 +142,30 @@ def _fmt_share(p: float) -> str:
     return f"{pct:.2g}%" if pct < 1 else f"{pct:.0f}%"
 
 
-def milestones(r: dict, ms: dict) -> list[tuple[str, float]]:
+def milestones(r: dict, ms: dict) -> list[tuple[str, str, float]]:
+    """(key, label, score) per milestone; key is the stat code for single-stat milestones."""
     out = []
     for stat in ("PTS", "REB", "AST", "STL", "BLK", "FG3M"):
         for threshold, score in ms.get(stat, []):
             if r[stat] >= threshold:
-                out.append((f"{int(r[stat])} {LABELS[stat]}", score))
+                out.append((stat, f"{int(r[stat])} {LABELS[stat]}", score))
                 break
     cats = ["PTS", "REB", "AST", "STL", "BLK"]
     tens = sum(r[c] >= 10 for c in cats)
     triple = f"{int(r['PTS'])}/{int(r['REB'])}/{int(r['AST'])}"
     if tens >= 4:
-        out.append((f"Quadruple-double ({triple})", ms["quadruple_double"]))
+        out.append(("QUADRUPLE_DOUBLE", f"Quadruple-double ({triple})", ms["quadruple_double"]))
     elif tens >= 3:
         if r["PTS"] >= 40:
-            out.append((f"40-point triple-double ({triple})", ms["triple_double_40"]))
+            out.append(("TRIPLE_DOUBLE", f"40-point triple-double ({triple})", ms["triple_double_40"]))
         elif r["PTS"] >= 30:
-            out.append((f"30-point triple-double ({triple})", ms["triple_double_30"]))
+            out.append(("TRIPLE_DOUBLE", f"30-point triple-double ({triple})", ms["triple_double_30"]))
         else:
-            out.append((f"Triple-double ({triple})", ms["triple_double"]))
+            out.append(("TRIPLE_DOUBLE", f"Triple-double ({triple})", ms["triple_double"]))
     if all(r[c] >= 5 for c in cats):
-        out.append(("5x5 (5+ in PTS/REB/AST/STL/BLK)", ms["five_by_five"]))
+        out.append(("FIVE_BY_FIVE", "5x5 (5+ in PTS/REB/AST/STL/BLK)", ms["five_by_five"]))
     if r["PTS"] >= 20 and r["REB"] >= 20:
-        out.append((f"20-20 game ({int(r['PTS'])} PTS, {int(r['REB'])} REB)", ms["twenty_twenty"]))
+        out.append(("TWENTY_TWENTY", f"20-20 game ({int(r['PTS'])} PTS, {int(r['REB'])} REB)", ms["twenty_twenty"]))
     return out
 
 
@@ -315,8 +316,8 @@ def _player_candidates(d, night, hist, players, cfg) -> list[Candidate]:
                     f"{'; ' + n if (n := stat_note(games, stat, rd[stat], False, career_window, n_seasons)) else ''})",
                     f"{_fmt_count(stat, rd[stat])} (top {_fmt_share(p)} of player games)")
 
-        for name, score in milestones(rd, cfg["milestones"]):
-            add("league", f"MILESTONE:{name}", 0, None, score, name)
+        for key, name, score in milestones(rd, cfg["milestones"]):
+            add("league", f"MILESTONE:{key}", 0, None, score, name)
     return out
 
 

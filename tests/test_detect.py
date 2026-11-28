@@ -39,10 +39,10 @@ def test_no_lookahead(cfg, league):
 
 def test_milestones(cfg):
     row = dict(PTS=41, REB=12, AST=11, STL=1, BLK=0, FG3M=3)
-    names = [n for n, _ in milestones(row, cfg["milestones"])]
+    names = [n for _, n, _ in milestones(row, cfg["milestones"])]
     assert "40-point triple-double (41/12/11)" in names
     row = dict(PTS=8, REB=7, AST=6, STL=5, BLK=5, FG3M=0)
-    assert any(n.startswith("5x5") for n, _ in milestones(row, cfg["milestones"]))
+    assert any(n.startswith("5x5") for _, n, _ in milestones(row, cfg["milestones"]))
 
 
 def test_empty_night(cfg, league):
@@ -104,3 +104,19 @@ def test_stat_note_lows_and_early_season():
     assert stat_note(early, "PTS", 35, False, False, 3) == "highest in 3 seasons, averaged 18.0 last season"
     import pandas as pd
     assert stat_note(pd.DataFrame(columns=["SEASON_IDX", "PTS"]), "PTS", 30, False, False, 3) == ""
+
+
+def test_milestone_merges_with_same_stat(cfg):
+    from outliers.detect import Candidate
+    def cand(kind, stat, z, reason):
+        return Candidate(kind, "P:1", "A", "T", "T vs U", stat, 15, None, z, reason, "")
+    cands = [cand("league", "MILESTONE:AST", 3.0, "15 AST"),
+             cand("league", "LEAGUE:AST", 2.9, "15 AST (top 0.18% of player games)"),
+             cand("league", "MILESTONE:TWENTY_TWENTY", 3.4, "20-20 game (22 PTS, 23 REB)"),
+             cand("league", "MILESTONE:REB", 3.0, "23 REB"),
+             cand("league", "LEAGUE:REB", 3.6, "23 REB (top 0.017% of player games)")]
+    top = select(cands[:2], cfg).items[0]
+    assert top.reason == "15 AST (top 0.18% of player games)" and top.context == []
+    top = select(cands[2:], cfg).items[0]
+    assert top.reason == "23 REB (top 0.017% of player games)"
+    assert top.context == ["20-20 game (22 PTS, 23 REB)"]
