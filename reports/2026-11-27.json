@@ -1,0 +1,208 @@
+{
+  "date": "2026-11-27",
+  "games": 11,
+  "quiet_night": false,
+  "n_over_threshold": 7,
+  "warnings": [],
+  "baseline": {
+    "method": "bayesian",
+    "seasons_back": 2,
+    "season_decay": [
+      1.0,
+      0.5,
+      0.25
+    ],
+    "recency_half_life_games": 15,
+    "normalization": "per_minute",
+    "minutes_basis": "expected",
+    "expected_minutes_window": 5,
+    "expected_minutes_recent_weight": 0.6,
+    "distribution": "count",
+    "thin_history_prior": "cohort",
+    "min_games_own": 8,
+    "exp_decay_half_life_games": 25,
+    "fixed_weights": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "fill_strength_minutes": 150,
+    "fill_strength_attempts": 60,
+    "minutes_tiers": [
+      15,
+      25,
+      32
+    ],
+    "dispersion_prior_games": 20,
+    "pct_concentration": 150,
+    "max_abs_z": 8.0,
+    "per_game_minutes_equiv": 30,
+    "prior_strength_minutes": {
+      "PTS": 400,
+      "REB": 300,
+      "AST": 300,
+      "OREB": 500,
+      "TOV": 500,
+      "STL": 800,
+      "BLK": 800,
+      "FG3M": 800
+    },
+    "prior_strength_attempts": {
+      "FG_PCT": 300,
+      "FG3_PCT": 250,
+      "FT_PCT": 150
+    },
+    "std_floor": {
+      "PTS": 4.0,
+      "REB": 2.5,
+      "AST": 2.0,
+      "OREB": 1.2,
+      "TOV": 1.2,
+      "STL": 1.0,
+      "BLK": 1.0,
+      "FG3M": 1.2
+    }
+  },
+  "items": [
+    {
+      "kind": "league",
+      "entity": "P:203507",
+      "name": "Giannis Antetokounmpo",
+      "team": "MIA",
+      "matchup": "MIA @ NYK",
+      "stat": "LEAGUE:REB",
+      "value": 23.0,
+      "expected": null,
+      "z": 3.582589128713723,
+      "reason": "23 REB (top 0.017% of player games; highest in 3 seasons, averaging 12.7 this season)",
+      "line": "22 pts, 23 reb, 3 ast \u00b7 10-19 FG, 0-4 3PT \u00b7 32 min",
+      "tags": [],
+      "score": 3.224330215842351,
+      "context": [
+        "20-20 game (22 PTS, 23 REB)",
+        "23 REB"
+      ],
+      "brief": "23 REB (top 0.017% of player games)",
+      "rank": 1
+    },
+    {
+      "kind": "league",
+      "entity": "P:1629674",
+      "name": "Neemias Queta",
+      "team": "BOS",
+      "matchup": "BOS vs. ATL",
+      "stat": "LEAGUE:REB",
+      "value": 22.0,
+      "expected": null,
+      "z": 3.358921605881925,
+      "reason": "22 REB (top 0.039% of player games; highest in 3 seasons, averaging 6.9 this season)",
+      "line": "11 pts, 22 reb, 3 ast \u00b7 4-8 FG, 0-1 3PT \u00b7 33 min",
+      "tags": [],
+      "score": 3.0230294452937327,
+      "context": [
+        "22 REB"
+      ],
+      "brief": "22 REB (top 0.039% of player games)",
+      "rank": 2
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1631157",
+      "name": "Ryan Rollins",
+      "team": "MIL",
+      "matchup": "MIL @ DET",
+      "stat": "STL",
+      "value": 6.0,
+      "expected": 1.0408408159830012,
+      "z": 2.9696385223758037,
+      "reason": "6 STL vs 1.0 expected (a 1-in-670 game for this player; highest in 3 seasons, averaging 0.9 this season)",
+      "line": "12 pts, 4 reb, 6 ast, 6 stl \u00b7 5-13 FG, 2-7 3PT \u00b7 30 min",
+      "tags": [],
+      "score": 2.9696385223758037,
+      "context": [],
+      "brief": "6 STL vs 1.0 expected (1-in-670)",
+      "rank": 3
+    },
+    {
+      "kind": "personal",
+      "entity": "P:1630530",
+      "name": "Trey Murphy III",
+      "team": "NOP",
+      "matchup": "NOP @ LAC",
+      "stat": "STL",
+      "value": 6.0,
+      "expected": 1.2521804147831537,
+      "z": 2.899084787213691,
+      "reason": "6 STL vs 1.3 expected (a 1-in-530 game for this player; highest in 3 seasons, averaging 1.2 this season)",
+      "line": "25 pts, 2 reb, 0 ast, 6 stl \u00b7 9-16 FG, 3-9 3PT \u00b7 34 min",
+      "tags": [],
+      "score": 2.899084787213691,
+      "context": [],
+      "brief": "6 STL vs 1.3 expected (1-in-530)",
+      "rank": 4
+    },
+    {
+      "kind": "team",
+      "entity": "T:1610612738",
+      "name": "BOS",
+      "team": "BOS",
+      "matchup": "BOS vs. ATL",
+      "stat": "TOV",
+      "value": 26.0,
+      "expected": 13.06127861032021,
+      "z": 3.0570186604866203,
+      "reason": "26 TOV (vs 13 usual, a 1-in-890 game for this team)",
+      "line": "86-87 L \u00b7 32-78 FG, 11-37 3PT, 26 TOV, 51 REB",
+      "tags": [],
+      "score": 2.751316794437958,
+      "context": [
+        "14 AST (bottom 0.53% of team games since 2024-25)",
+        "86 PTS (vs 112 usual, 1-in-110)"
+      ],
+      "brief": "26 TOV (vs 13 usual, 1-in-890)",
+      "rank": 5
+    },
+    {
+      "kind": "league",
+      "entity": "P:203999",
+      "name": "Nikola Joki\u0107",
+      "team": "DEN",
+      "matchup": "DEN @ UTA",
+      "stat": "MILESTONE:15 AST",
+      "value": 0.0,
+      "expected": null,
+      "z": 3.0,
+      "reason": "15 AST",
+      "line": "17 pts, 9 reb, 15 ast \u00b7 7-19 FG, 2-3 3PT \u00b7 36 min",
+      "tags": [],
+      "score": 2.7,
+      "context": [
+        "15 AST (top 0.18% of player games)"
+      ],
+      "brief": "15 AST",
+      "rank": 6
+    },
+    {
+      "kind": "team",
+      "entity": "T:1610612754",
+      "name": "IND",
+      "team": "IND",
+      "matchup": "IND vs. PHI",
+      "stat": "FG3_PCT",
+      "value": 0.13513513513513514,
+      "expected": 0.34609658664995724,
+      "z": -2.798809138709995,
+      "reason": "5-37 3PT (14%) (bottom 0.26% of team games since 2024-25)",
+      "line": "87-111 L \u00b7 30-86 FG, 5-37 3PT, 19 TOV, 51 REB",
+      "tags": [],
+      "score": 2.5189282248389957,
+      "context": [
+        "5 3PM (bottom 1% of team games since 2024-25)",
+        "30-86 FG (35%) (bottom 1% of team games since 2024-25)",
+        "87 PTS (bottom 1% of team games since 2024-25)"
+      ],
+      "brief": "5-37 3PT (14%) (bottom 0.26% of team games since 2024-25)",
+      "rank": 7
+    }
+  ]
+}
